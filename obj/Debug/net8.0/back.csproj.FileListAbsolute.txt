@@ -38,3 +38,5 @@
 /Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/SharpCompress.dll
 /Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/Snappier.dll
 /Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/ZstdSharp.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/back.xml
+/Users/jonathan/Documents/million-technical-test/back/obj/Debug/net8.0/back.xml

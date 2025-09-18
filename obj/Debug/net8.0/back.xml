@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>back</name>
+    </assembly>
+    <members>
+        <member name="T:PropertiesController">
+            <summary>
+            Controller for managing property operations
+            </summary>
+        </member>
+        <member name="M:PropertiesController.#ctor(MongoDbService)">
+            <summary>
+            Initializes a new instance of the PropertiesController
+            </summary>
+            <param name="mongoDbService">MongoDB service for database operations</param>
+        </member>
+        <member name="M:PropertiesController.GetProperties(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+            <summary>
+            Get a paginated list of properties with optional search filters
+            </summary>
+            <param name="name">Filter by property name (partial match, case-insensitive)</param>
+            <param name="address">Filter by property address (partial match, case-insensitive)</param>
+            <param name="minPrice">Filter properties with price greater than or equal to this value</param>
+            <param name="maxPrice">Filter properties with price less than or equal to this value</param>
+            <param name="page">Page number (1-based, default: 1)</param>
+            <param name="pageSize">Number of items per page (default: 10, max: 100)</param>
+            <returns>Paginated list of properties with owner information</returns>
+            <response code="200">Returns the paginated list of properties</response>
+            <response code="400">Invalid request parameters</response>
+        </member>
+        <member name="M:PropertiesController.GetProperty(System.String)">
+            <summary>
+            Get detailed information about a specific property by ID
+            </summary>
+            <param name="id">The property ID</param>
+            <returns>Detailed property information with complete owner details</returns>
+            <response code="200">Returns the property details</response>
+            <response code="404">Property not found</response>
+            <response code="400">Invalid property ID format</response>
+        </member>
+        <member name="T:Owner">
+            <summary>
+            Represents an owner in the real estate system
+            </summary>
+        </member>
+        <member name="P:Owner.Id">
+            <summary>
+            Unique identifier for the owner
+            </summary>
+        </member>
+        <member name="P:Owner.Name">
+            <summary>
+            Full name of the owner
+            </summary>
+        </member>
+        <member name="P:Owner.Address">
+            <summary>
+            Address of the owner
+            </summary>
+        </member>
+        <member name="P:Owner.Photo">
+            <summary>
+            URL to the owner's photo
+            </summary>
+        </member>
+        <member name="P:Owner.Birthday">
+            <summary>
+            Owner's birthday
+            </summary>
+        </member>
+        <member name="T:PaginationDto">
+            <summary>
+            Pagination metadata for API responses
+            </summary>
+        </member>
+        <member name="P:PaginationDto.CurrentPage">
+            <summary>
+            Current page number (1-based)
+            </summary>
+        </member>
+        <member name="P:PaginationDto.PageSize">
+            <summary>
+            Number of items per page
+            </summary>
+        </member>
+        <member name="P:PaginationDto.TotalItems">
+            <summary>
+            Total number of items across all pages
+            </summary>
+        </member>
+        <member name="P:PaginationDto.TotalPages">
+            <summary>
+            Total number of pages
+            </summary>
+        </member>
+        <member name="P:PaginationDto.HasNext">
+            <summary>
+            Whether there is a next page available
+            </summary>
+        </member>
+        <member name="P:PaginationDto.HasPrevious">
+            <summary>
+            Whether there is a previous page available
+            </summary>
+        </member>
+        <member name="T:PaginatedResponseDto`1">
+            <summary>
+            Generic paginated response wrapper
+            </summary>
+            <typeparam name="T">Type of items in the response</typeparam>
+        </member>
+        <member name="P:PaginatedResponseDto`1.Data">
+            <summary>
+            Array of items for the current page
+            </summary>
+        </member>
+        <member name="P:PaginatedResponseDto`1.Pagination">
+            <summary>
+            Pagination metadata
+            </summary>
+        </member>
+        <member name="T:Property">
+            <summary>
+            Represents a property in the real estate system
+            </summary>
+        </member>
+        <member name="P:Property.Id">
+            <summary>
+            Unique identifier for the property
+            </summary>
+        </member>
+        <member name="P:Property.Name">
+            <summary>
+            Name of the property
+            </summary>
+        </member>
+        <member name="P:Property.Address">
+            <summary>
+            Address of the property
+            </summary>
+        </member>
+        <member name="P:Property.Price">
+            <summary>
+            Price of the property
+            </summary>
+        </member>
+        <member name="P:Property.CodeInternal">
+            <summary>
+            Internal code for the property
+            </summary>
+        </member>
+        <member name="P:Property.Year">
+            <summary>
+            Year the property was built
+            </summary>
+        </member>
+        <member name="P:Property.OwnerId">
+            <summary>
+            Reference to the owner of the property
+            </summary>
+        </member>
+        <member name="P:Property.Images">
+            <summary>
+            List of images associated with the property
+            </summary>
+        </member>
+        <member name="P:Property.Trace">
+            <summary>
+            Transaction history of the property
+            </summary>
+        </member>
+        <member name="T:PropertyImage">
+            <summary>
+            Represents an image associated with a property
+            </summary>
+        </member>
+        <member name="P:PropertyImage.File">
+            <summary>
+            URL or path to the image file
+            </summary>
+        </member>
+        <member name="P:PropertyImage.Enabled">
+            <summary>
+            Whether the image is enabled for display
+            </summary>
+        </member>
+        <member name="T:PropertyTrace">
+            <summary>
+            Represents a transaction record for a property
+            </summary>
+        </member>
+        <member name="P:PropertyTrace.DateSale">
+            <summary>
+            Date of the sale transaction
+            </summary>
+        </member>
+        <member name="P:PropertyTrace.Name">
+            <summary>
+            Name or description of the transaction
+            </summary>
+        </member>
+        <member name="P:PropertyTrace.Value">
+            <summary>
+            Value of the transaction
+            </summary>
+        </member>
+        <member name="P:PropertyTrace.Tax">
+            <summary>
+            Tax amount for the transaction
+            </summary>
+        </member>
+        <member name="T:PropertyDto">
+            <summary>
+            Data Transfer Object for Property with Owner information
+            Used for API responses that include owner details
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Id">
+            <summary>
+            Unique identifier for the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Name">
+            <summary>
+            Name of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Address">
+            <summary>
+            Address of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Price">
+            <summary>
+            Price of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.CodeInternal">
+            <summary>
+            Internal code for the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Year">
+            <summary>
+            Year the property was built
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Owner">
+            <summary>
+            Owner information
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Images">
+            <summary>
+            List of images associated with the property
+            </summary>
+        </member>
+        <member name="P:PropertyDto.Trace">
+            <summary>
+            Transaction history of the property
+            </summary>
+        </member>
+        <member name="T:OwnerSummaryDto">
+            <summary>
+            Summary information about an owner
+            </summary>
+        </member>
+        <member name="P:OwnerSummaryDto.Id">
+            <summary>
+            Unique identifier for the owner
+            </summary>
+        </member>
+        <member name="P:OwnerSummaryDto.Name">
+            <summary>
+            Full name of the owner
+            </summary>
+        </member>
+        <member name="P:OwnerSummaryDto.Address">
+            <summary>
+            Address of the owner
+            </summary>
+        </member>
+        <member name="T:PropertyDetailDto">
+            <summary>
+            Detailed property information with complete owner details
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Id">
+            <summary>
+            Unique identifier for the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Name">
+            <summary>
+            Name of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Address">
+            <summary>
+            Address of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Price">
+            <summary>
+            Price of the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.CodeInternal">
+            <summary>
+            Internal code for the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Year">
+            <summary>
+            Year the property was built
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Owner">
+            <summary>
+            Complete owner information
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Images">
+            <summary>
+            List of images associated with the property
+            </summary>
+        </member>
+        <member name="P:PropertyDetailDto.Trace">
+            <summary>
+            Transaction history of the property
+            </summary>
+        </member>
+        <member name="T:OwnerDetailDto">
+            <summary>
+            Complete owner information
+            </summary>
+        </member>
+        <member name="P:OwnerDetailDto.Id">
+            <summary>
+            Unique identifier for the owner
+            </summary>
+        </member>
+        <member name="P:OwnerDetailDto.Name">
+            <summary>
+            Full name of the owner
+            </summary>
+        </member>
+        <member name="P:OwnerDetailDto.Address">
+            <summary>
+            Address of the owner
+            </summary>
+        </member>
+        <member name="P:OwnerDetailDto.Photo">
+            <summary>
+            URL to the owner's photo
+            </summary>
+        </member>
+        <member name="P:OwnerDetailDto.Birthday">
+            <summary>
+            Owner's birthday
+            </summary>
+        </member>
+        <member name="T:MongoDbService">
+            <summary>
+            Service for MongoDB database operations
+            </summary>
+        </member>
+        <member name="M:MongoDbService.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the MongoDbService
+            </summary>
+            <param name="connectionString">MongoDB connection string</param>
+            <param name="databaseName">Database name</param>
+        </member>
+        <member name="M:MongoDbService.GetPropertiesAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Int32,System.Int32)">
+            <summary>
+            Gets paginated properties with owner information and optional filters
+            </summary>
+            <param name="name">Optional name filter (partial match)</param>
+            <param name="address">Optional address filter (partial match)</param>
+            <param name="minPrice">Optional minimum price filter</param>
+            <param name="maxPrice">Optional maximum price filter</param>
+            <param name="page">Page number (1-based)</param>
+            <param name="pageSize">Number of items per page</param>
+            <returns>Paginated list of properties with owner information</returns>
+        </member>
+        <member name="M:MongoDbService.GetPropertyByIdAsync(System.String)">
+            <summary>
+            Gets a single property with complete owner details by ID
+            </summary>
+            <param name="id">Property ID</param>
+            <returns>Property with complete owner information</returns>
+        </member>
+    </members>
+</doc>

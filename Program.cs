@@ -2,20 +2,63 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
 
-const string connectionUri = "mongodb+srv://cifuentesjonathan_db_user:qEMV64gJQBypFfHl@million-technical-test.eamxogg.mongodb.net/?retryWrites=true&w=majority&appName=million-technical-test";
+var builder = WebApplication.CreateBuilder(args);
 
-var settings = MongoClientSettings.FromConnectionString(connectionUri);
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Real Estate Properties API",
+        Version = "v1",
+        Description = "API for managing real estate properties with search and pagination capabilities",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "API Support",
+            Email = "support@example.com"
+        }
+    });
 
-// Set the ServerApi field of the settings object to set the version of the Stable API on the client
-settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+    // Enable XML comments
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
+});
 
-// Create a new client and connect to the server
-var client = new MongoClient(settings);
+// Configure MongoDB
+var mongoSettings = builder.Configuration.GetSection("MongoDB");
+var connectionString = mongoSettings["ConnectionString"];
+var databaseName = mongoSettings["DatabaseName"];
 
-// Send a ping to confirm a successful connection
-try {
-  var result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
-  Console.WriteLine("Pinged your deployment. You successfully connected to MongoDB!");
-} catch (Exception ex) {
-  Console.WriteLine(ex);
+if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(databaseName))
+{
+    throw new InvalidOperationException("MongoDB configuration is missing. Please check appsettings.json");
 }
+
+// Register MongoDB service
+builder.Services.AddSingleton<MongoDbService>(sp =>
+    new MongoDbService(connectionString, databaseName));
+
+// Add controllers
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+// Map controllers
+app.MapControllers();
+
+app.Run();
