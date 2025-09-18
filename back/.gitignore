@@ -1,0 +1,90 @@
+# Binaries
+**/bin/
+**/obj/
+
+# NuGet packages
+**/packages/
+
+# User-specific files
+*.user
+*.suo
+
+# IDE files
+.vscode/
+.vs/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# ASP.NET Core
+**/wwwroot/lib/
+
+# Test results
+**/TestResults/
+
+# Database files (if any)
+*.db
+*.sqlite
+
+# Build results
+*.dll
+*.exe
+*.pdb
+*.cache
+*.xml
+
+# Rider
+.idea/
+
+# ReSharper
+_ReSharper*/
+
+# TeamCity
+_TeamCity*
+
+# DotCover
+*.dotCover
+
+# NCrunch
+*.ncrunch*
+
+# Windows
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Backup files
+*.bak
+*.backup
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# MongoDB (if local data files are present, but typically not in repo)
+*.lock
+storage.bson
