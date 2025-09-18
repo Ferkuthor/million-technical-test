@@ -31,3 +31,10 @@
 /Users/jonathan/Documents/million-technical-test/back/obj/Debug/net8.0/back.pdb
 /Users/jonathan/Documents/million-technical-test/back/obj/Debug/net8.0/back.genruntimeconfig.cache
 /Users/jonathan/Documents/million-technical-test/back/obj/Debug/net8.0/ref/back.dll
+/Users/jonathan/Documents/million-technical-test/back/obj/Debug/net8.0/back.sourcelink.json
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/DnsClient.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/MongoDB.Bson.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/MongoDB.Driver.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/SharpCompress.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/Snappier.dll
+/Users/jonathan/Documents/million-technical-test/back/bin/Debug/net8.0/ZstdSharp.dll

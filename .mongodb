@@ -1,0 +1,105 @@
+// Nombre de la base de datos a usar.
+// Si no existe, se creará automáticamente al insertar el primer documento.
+use("RealEstateDB");
+
+// Primero, borramos las colecciones para empezar desde cero si ya existen datos.
+db.owners.drop();
+db.properties.drop();
+
+// === 1. Insertar tres dueños ===
+// Creamos los documentos de los dueños
+const owners = [
+  {
+    _id: ObjectId(),
+    name: "Sofía Martínez",
+    address: "Calle de la Luna 10",
+    photo: "http://example.com/photos/sofia.jpg",
+    birthday: new Date("1990-03-25T00:00:00Z"),
+  },
+  {
+    _id: ObjectId(),
+    name: "Carlos López",
+    address: "Avenida del Sol 5",
+    photo: "http://example.com/photos/carlos.jpg",
+    birthday: new Date("1985-07-10T00:00:00Z"),
+  },
+  {
+    _id: ObjectId(),
+    name: "Elena Garcés",
+    address: "Plaza Mayor 20",
+    photo: "http://example.com/photos/elena.jpg",
+    birthday: new Date("1978-11-08T00:00:00Z"),
+  },
+];
+
+// Insertamos los documentos en la colección 'owners'
+db.owners.insertMany(owners);
+
+// === 2. Insertar tres propiedades, cada una con datos anidados ===
+// Enlazamos cada propiedad con el 'IdOwner' correspondiente
+const properties = [
+  {
+    name: "Apartamento en el centro",
+    address: "Calle del Comercio 101",
+    price: 150000,
+    codeInternal: "APT-001",
+    year: 2015,
+    owner_id: owners[0]._id, // Enlazado a Sofía
+    images: [
+      { file: "http://example.com/images/apt_1.jpg", enabled: true },
+      { file: "http://example.com/images/apt_2.jpg", enabled: true },
+    ],
+    trace: [
+      {
+        dateSale: new Date("2020-05-18T00:00:00Z"),
+        name: "Compra inicial",
+        value: 145000,
+        tax: 5800,
+      },
+    ],
+  },
+  {
+    name: "Casa con jardín",
+    address: "Urbanización Los Pinos, 32",
+    price: 320000,
+    codeInternal: "CHS-002",
+    year: 2008,
+    owner_id: owners[1]._id, // Enlazado a Carlos
+    images: [
+      { file: "http://example.com/images/casa_1.jpg", enabled: true },
+    ],
+    trace: [
+      {
+        dateSale: new Date("2018-09-01T00:00:00Z"),
+        name: "Venta",
+        value: 300000,
+        tax: 12000,
+      },
+    ],
+  },
+  {
+    name: "Estudio cerca de la universidad",
+    address: "Calle del Estudiante 55",
+    price: 85000,
+    codeInternal: "EST-003",
+    year: 2022,
+    owner_id: owners[2]._id, // Enlazado a Elena
+    images: [
+      { file: "http://example.com/images/estudio_1.jpg", enabled: true },
+      { file: "http://example.com/images/estudio_2.jpg", enabled: true },
+      { file: "http://example.com/images/estudio_3.jpg", enabled: false },
+    ],
+    trace: [], // Sin historial de transacciones por el momento
+  },
+];
+
+// Insertamos los documentos en la colección 'properties'
+db.properties.insertMany(properties);
+
+// === Opcional: Crear un índice para optimizar consultas ===
+db.properties.createIndex({ owner_id: 1 });
+
+// === Opcional: Verificamos los datos insertados ===
+console.log("Datos insertados. Puedes verificarlo con los siguientes comandos:");
+console.log("db.owners.find()");
+console.log("db.properties.find()");

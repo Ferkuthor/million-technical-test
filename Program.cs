@@ -1,44 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+using MongoDB.Driver;
+using MongoDB.Bson;
 
-var app = builder.Build();
+const string connectionUri = "mongodb+srv://cifuentesjonathan_db_user:qEMV64gJQBypFfHl@million-technical-test.eamxogg.mongodb.net/?retryWrites=true&w=majority&appName=million-technical-test";
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+var settings = MongoClientSettings.FromConnectionString(connectionUri);
 
-app.UseHttpsRedirection();
+// Set the ServerApi field of the settings object to set the version of the Stable API on the client
+settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Create a new client and connect to the server
+var client = new MongoClient(settings);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+// Send a ping to confirm a successful connection
+try {
+  var result = client.GetDatabase("admin").RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+  Console.WriteLine("Pinged your deployment. You successfully connected to MongoDB!");
+} catch (Exception ex) {
+  Console.WriteLine(ex);
 }
