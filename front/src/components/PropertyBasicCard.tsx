@@ -1,5 +1,11 @@
 import Image from "next/image";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface PropertyBasicCardProps {
@@ -11,7 +17,14 @@ interface PropertyBasicCardProps {
   year: number;
 }
 
-export function PropertyBasicCard({ imageSrc, name, address, price, codeInternal, year }: PropertyBasicCardProps) {
+export function PropertyBasicCard({
+  imageSrc,
+  name,
+  address,
+  price,
+  codeInternal,
+  year,
+}: PropertyBasicCardProps) {
   return (
     <Card className="pt-0">
       <Image
@@ -22,9 +35,12 @@ export function PropertyBasicCard({ imageSrc, name, address, price, codeInternal
         className="w-full h-auto rounded-t-lg mb-4"
       />
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
+        <CardTitle>
+          <h2>{name}</h2>
+        </CardTitle>
         <CardDescription>{address}</CardDescription>
-        <p className="text-sm text-muted-foreground">Code: {codeInternal} | Year: {year}</p>
+        <CardDescription>Code: {codeInternal}</CardDescription>
+        <CardDescription>Year: {year}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">

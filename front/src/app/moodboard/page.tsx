@@ -6,6 +6,16 @@ export default function Moodboard() {
   return (
     <div className="container mx-auto p-4">
       <section className="mb-10">
+        <h1 className="mb-4">Heading 1</h1>
+        <h2 className="mb-2">Heading 2</h2>
+        <h3 className="mb-2">Heading 3</h3>
+        <p className="mb-4">
+          This is a paragraph example with some sample text to demonstrate the
+          typography styling.
+        </p>
+      </section>
+
+      <section className="mb-10">
         <h1 className="text-xl font-semibold mb-4">Buttons</h1>
         <div className="flex flex-wrap gap-4">
           <Button>Default</Button>
