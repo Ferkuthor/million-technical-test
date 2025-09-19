@@ -13,9 +13,9 @@ export default function Moodboard() {
             <PropertyBasicCard
               key={index}
               imageSrc="https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/407228689_1.jpg&width=1170"
-              title="Happy Mood"
-              description="A bright and cheerful mood"
-              content="This card represents a happy mood with vibrant colors and positive vibes."
+              name="Luxury Villa"
+              address="123 Ocean Drive, Miami, FL"
+              price="$2,500,000"
             />
           ))}
         </div>
