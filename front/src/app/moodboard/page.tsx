@@ -1,5 +1,5 @@
-import { PropertyBasicCard } from "@/components/PropertyBasicCard";
-import { PropertyDetail } from "@/components/PropertyDetail/PropertyDetail";
+import { PropertyBasicCard } from "@/app/properties/__components__/PropertyBasicCard/PropertyBasicCard";
+import { PropertyDetail } from "@/app/properties/[id]/__components__/PropertyDetail/PropertyDetail";
 import { Button } from "@/components/ui/button";
 
 export default function Moodboard() {
@@ -35,6 +35,7 @@ export default function Moodboard() {
           {Array.from({ length: 6 }).map((_, index) => (
             <PropertyBasicCard
               key={index}
+              id={index.toString()}
               imageSrc="https://cdn.millionluxury.com/image-resizing?image=https://azfd-prod.millionluxury.com/mls/407228689_1.jpg&width=1170"
               name="Luxury Villa"
               address="123 Ocean Drive, Miami, FL"

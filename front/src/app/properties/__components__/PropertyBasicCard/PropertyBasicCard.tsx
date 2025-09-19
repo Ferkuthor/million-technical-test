@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface PropertyBasicCardProps {
+  id: string;
   imageSrc: string;
   name: string;
   address: string;
@@ -18,6 +20,7 @@ interface PropertyBasicCardProps {
 }
 
 export function PropertyBasicCard({
+  id,
   imageSrc,
   name,
   address,
@@ -45,7 +48,9 @@ export function PropertyBasicCard({
       <CardContent>
         <div className="flex justify-between items-center">
           <p className="text-lg font-bold text-secondary">{price}</p>
-          <Button>View</Button>
+          <Link href={`/properties/${id}`}>
+            <Button>View</Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

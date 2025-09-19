@@ -1,8 +1,8 @@
-import { PropertyImageGallery } from "./PropertyImageGallery";
-import { PropertyInfo } from "./PropertyInfo";
-import { PropertyActions } from "./PropertyActions";
-import { PropertyTrace } from "./PropertyTrace";
-import { PropertyOwner } from "./PropertyOwner";
+import { PropertyImageGallery } from "../PropertyImageGallery/PropertyImageGallery";
+import { PropertyInfo } from "../PropertyInfo/PropertyInfo";
+import { PropertyActions } from "../PropertyActions/PropertyActions";
+import { PropertyTrace } from "../PropertyTrace/PropertyTrace";
+import { PropertyOwner } from "../PropertyOwner/PropertyOwner";
 
 interface PropertyDetailProps {
   property: {
