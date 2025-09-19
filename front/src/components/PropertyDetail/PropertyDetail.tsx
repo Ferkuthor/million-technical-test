@@ -1,6 +1,5 @@
 import { PropertyImageGallery } from "./PropertyImageGallery";
 import { PropertyInfo } from "./PropertyInfo";
-import { PropertyFeatures } from "./PropertyFeatures";
 import { PropertyActions } from "./PropertyActions";
 import { PropertyTrace } from "./PropertyTrace";
 import { PropertyOwner } from "./PropertyOwner";
@@ -38,7 +37,6 @@ export function PropertyDetail({ property }: PropertyDetailProps) {
             codeInternal={property.codeInternal}
             year={property.year}
           />
-          <PropertyFeatures year={property.year} />
           <PropertyActions />
         </div>
       </div>
