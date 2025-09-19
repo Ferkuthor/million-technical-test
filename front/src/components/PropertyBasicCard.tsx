@@ -7,9 +7,11 @@ interface PropertyBasicCardProps {
   name: string;
   address: string;
   price: string;
+  codeInternal: string;
+  year: number;
 }
 
-export function PropertyBasicCard({ imageSrc, name, address, price }: PropertyBasicCardProps) {
+export function PropertyBasicCard({ imageSrc, name, address, price, codeInternal, year }: PropertyBasicCardProps) {
   return (
     <Card className="pt-0">
       <Image
@@ -22,6 +24,7 @@ export function PropertyBasicCard({ imageSrc, name, address, price }: PropertyBa
       <CardHeader>
         <CardTitle>{name}</CardTitle>
         <CardDescription>{address}</CardDescription>
+        <p className="text-sm text-muted-foreground">Code: {codeInternal} | Year: {year}</p>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">
