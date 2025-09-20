@@ -15,10 +15,13 @@ export const useProperties = (initialData?: PaginatedResponseDto<PropertyListDto
     queryFn: fetchProperties,
     initialData,
     enabled: !initialData, // Solo hacer fetch si NO tenemos initialData del servidor
-    staleTime: Infinity, // Nunca considerar los datos stale
-    refetchOnMount: false, // Nunca refetch al montar
-    refetchOnWindowFocus: false, // Nunca refetch al cambiar foco
-    refetchOnReconnect: false, // Nunca refetch al reconectar
-    refetchInterval: false, // Desactivar refetch automático
+    staleTime: 5 * 60 * 1000, // 5 minutos: permite revalidación si los datos cambian
+    gcTime: 10 * 60 * 1000, // 10 minutos: cuánto tiempo cachear los datos
+    retry: 3, // Reintentar hasta 3 veces en caso de error
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Backoff exponencial
+    refetchOnMount: false,
+    refetchOnWindowFocus: false, // Mantener false para evitar fetches al cambiar foco
+    refetchOnReconnect: true, // Re-fetch al reconectar si no hay initialData
+    refetchInterval: false,
   });
 };
