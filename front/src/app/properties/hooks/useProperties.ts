@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { PropertyListDto, PaginatedResponseDto } from '../types';
+import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '../types';
 
 interface FetchPropertiesParams {
   page?: number;
@@ -42,4 +42,16 @@ export const useProperties = (params: FetchPropertiesParams = {}, initialData?: 
     refetchOnReconnect: true, // Re-fetch on reconnect if no initialData
     refetchInterval: false,
   });
+};
+
+export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
+  const url = `http://localhost:5116/api/properties/${id}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Property not found');
+    }
+    throw new Error('Failed to fetch property details');
+  }
+  return response.json();
 };

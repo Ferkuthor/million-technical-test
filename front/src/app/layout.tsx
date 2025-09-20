@@ -33,12 +33,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased pt-16`}
+        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased pt-16 min-h-screen flex flex-col`}
       >
         <Providers>
-          <Header />
-          {children}
-          <Footer />
+          <div className="flex flex-col flex-grow">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
