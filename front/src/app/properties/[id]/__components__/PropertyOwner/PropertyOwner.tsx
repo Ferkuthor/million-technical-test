@@ -25,7 +25,7 @@ export function PropertyOwner({ owner }: PropertyOwnerProps) {
           <p className="font-medium">{owner.name}</p>
           <p className="text-sm text-muted-foreground">{owner.address}</p>
           <p className="text-sm text-muted-foreground">
-            {owner.birthday.toLocaleDateString()}
+            {owner.birthday.toLocaleDateString("en-US")}
           </p>
         </div>
       </div>

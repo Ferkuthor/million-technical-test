@@ -9,7 +9,10 @@ interface PropertiesPageProps {
 export default async function PropertiesPage({
   searchParams,
 }: PropertiesPageProps) {
-  const page = searchParams.page ? parseInt(searchParams.page as string) : 1;
+  const searchParamsResolved = await searchParams;
+  const page = searchParamsResolved.page
+    ? parseInt(searchParamsResolved.page as string)
+    : 1;
   let initialData: PaginatedResponseDto<PropertyListDto> | undefined =
     undefined;
 

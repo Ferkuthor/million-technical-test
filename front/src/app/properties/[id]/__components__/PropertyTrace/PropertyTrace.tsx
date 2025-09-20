@@ -13,7 +13,7 @@ export function PropertyTrace({ trace }: PropertyTraceProps) {
               <div>
                 <h4 className="font-medium">{item.name}</h4>
                 <p className="text-sm text-muted-foreground">
-                  {item.dateSale.toLocaleDateString()}
+                  {item.dateSale.toLocaleDateString("en-US")}
                 </p>
               </div>
               <div className="text-right">

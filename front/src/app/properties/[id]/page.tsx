@@ -9,7 +9,8 @@ interface PageProps {
 }
 
 export default async function PropertyDetailPage({ params }: PageProps) {
-  const { id } = params;
+  const paramsResolved = await params;
+  const { id } = paramsResolved;
 
   try {
     const property = await fetchPropertyDetail(id);
