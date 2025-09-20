@@ -1,27 +1,45 @@
 import { useQuery } from '@tanstack/react-query';
 import { PropertyListDto, PaginatedResponseDto } from '../types';
 
-export const fetchProperties = async (): Promise<PaginatedResponseDto<PropertyListDto>> => {
-  const response = await fetch('http://localhost:5116/api/properties');
+interface FetchPropertiesParams {
+  page?: number;
+  pageSize?: number;
+}
+
+export const fetchProperties = async (params: FetchPropertiesParams = {}): Promise<PaginatedResponseDto<PropertyListDto>> => {
+  const queryParams = new URLSearchParams();
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.pageSize) queryParams.append('pageSize', params.pageSize.toString());
+
+  const url = `http://localhost:5116/api/properties${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch properties');
   }
   return response.json();
 };
 
-export const useProperties = (initialData?: PaginatedResponseDto<PropertyListDto>) => {
+export const useProperties = (params: FetchPropertiesParams = {}, initialData?: PaginatedResponseDto<PropertyListDto>) => {
+  const currentPage = params.page || 1;
+  const currentPageSize = params.pageSize || 12;
+
+  // Check if initialData matches current params
+  const shouldUseInitialData = initialData &&
+    initialData.pagination.currentPage === currentPage &&
+    initialData.pagination.pageSize === currentPageSize;
+
   return useQuery({
-    queryKey: ['properties'],
-    queryFn: fetchProperties,
-    initialData,
-    enabled: !initialData, // Solo hacer fetch si NO tenemos initialData del servidor
-    staleTime: 5 * 60 * 1000, // 5 minutos: permite revalidación si los datos cambian
-    gcTime: 10 * 60 * 1000, // 10 minutos: cuánto tiempo cachear los datos
-    retry: 3, // Reintentar hasta 3 veces en caso de error
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Backoff exponencial
-    refetchOnMount: false,
-    refetchOnWindowFocus: false, // Mantener false para evitar fetches al cambiar foco
-    refetchOnReconnect: true, // Re-fetch al reconectar si no hay initialData
+    queryKey: ['properties', params],
+    queryFn: () => fetchProperties(params),
+    initialData: shouldUseInitialData ? initialData : undefined,
+    enabled: !shouldUseInitialData, // Only fetch if we don't have matching initialData
+    staleTime: 5 * 60 * 1000, // 5 minutes: allows revalidation if data changes
+    gcTime: 10 * 60 * 1000, // 10 minutes: how long to cache data
+    retry: 3, // Retry up to 3 times on error
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    refetchOnMount: 'always', // Force refetch when page changes to ensure fresh data
+    refetchOnWindowFocus: false, // Keep false to avoid fetches on focus change
+    refetchOnReconnect: true, // Re-fetch on reconnect if no initialData
     refetchInterval: false,
   });
 };

@@ -1,4 +1,4 @@
-import { PropertyBasicCard } from "@/app/properties/__components__/PropertyBasicCard/PropertyBasicCard";
+import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesList/PropertyBasicCard";
 import { PropertyDetail } from "@/app/properties/[id]/__components__/PropertyDetail/PropertyDetail";
 import { Button } from "@/components/ui/button";
 

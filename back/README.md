@@ -29,6 +29,7 @@ A comprehensive REST API for managing real estate properties with advanced searc
 ### Steps
 
 1. **Run the application**
+
    ```bash
    dotnet run
    ```
@@ -41,6 +42,7 @@ A comprehensive REST API for managing real estate properties with advanced searc
 
 1. **Configure MongoDB connection**
    Update `appsettings.json`:
+
    ```json
    {
      "MongoDB": {
@@ -65,14 +67,14 @@ Retrieve a paginated list of properties with optional search filters.
 
 ##### Query Parameters
 
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `name` | string | Filter by property name (partial match, case-insensitive) | `name=apartamento` |
-| `address` | string | Filter by property address (partial match, case-insensitive) | `address=calle` |
-| `minPrice` | decimal | Minimum price filter | `minPrice=100000` |
-| `maxPrice` | decimal | Maximum price filter | `maxPrice=500000` |
-| `page` | int | Page number (1-based, default: 1) | `page=2` |
-| `pageSize` | int | Items per page (default: 10, max: 100) | `pageSize=20` |
+| Parameter  | Type    | Description                                                  | Example            |
+| ---------- | ------- | ------------------------------------------------------------ | ------------------ |
+| `name`     | string  | Filter by property name (partial match, case-insensitive)    | `name=apartamento` |
+| `address`  | string  | Filter by property address (partial match, case-insensitive) | `address=calle`    |
+| `minPrice` | decimal | Minimum price filter                                         | `minPrice=100000`  |
+| `maxPrice` | decimal | Maximum price filter                                         | `maxPrice=500000`  |
+| `page`     | int     | Page number (1-based, default: 1)                            | `page=2`           |
+| `pageSize` | int     | Items per page (default: 12, max: 100)                       | `pageSize=20`      |
 
 ##### Response
 
@@ -109,7 +111,7 @@ Retrieve a paginated list of properties with optional search filters.
   ],
   "pagination": {
     "currentPage": 1,
-    "pageSize": 10,
+    "pageSize": 12,
     "totalItems": 25,
     "totalPages": 3,
     "hasNext": true,
@@ -124,6 +126,9 @@ Retrieve a paginated list of properties with optional search filters.
 # Get all properties (default pagination)
 GET /api/properties
 
+# Get specific page
+GET /api/properties?page=2
+
 # Search by name
 GET /api/properties?name=apartamento
 
@@ -137,6 +142,18 @@ GET /api/properties?address=calle&page=1&pageSize=5
 GET /api/properties?name=casa&minPrice=200000&pageSize=20
 ```
 
+##### URL-based Pagination
+
+The API supports URL-based pagination for better SEO and shareability:
+
+- Page numbers are included in the URL as query parameters
+- Server-side rendering (SSR) is supported for direct page access
+- Default page size is 12 items per page
+- Example URLs:
+  - `/properties` (page 1)
+  - `/properties?page=2` (page 2)
+  - `/properties?page=3&pageSize=20` (page 3 with 20 items)
+
 #### 2. Get Property Details
 
 **GET** `/api/properties/{id}`
@@ -145,9 +162,9 @@ Retrieve detailed information about a specific property including complete owner
 
 ##### Path Parameters
 
-| Parameter | Type | Description | Required |
-|-----------|------|-------------|----------|
-| `id` | string | Property ID | Yes |
+| Parameter | Type   | Description | Required |
+| --------- | ------ | ----------- | -------- |
+| `id`      | string | Property ID | Yes      |
 
 ##### Response
 
@@ -192,6 +209,7 @@ GET /api/properties/507f1f77bcf86cd799439011
 ### Data Models
 
 #### Property
+
 - `id`: Unique identifier
 - `name`: Property name
 - `address`: Property address
@@ -203,6 +221,7 @@ GET /api/properties/507f1f77bcf86cd799439011
 - `trace`: Transaction history
 
 #### Owner
+
 - `id`: Unique identifier
 - `name`: Owner name
 - `address`: Owner address
