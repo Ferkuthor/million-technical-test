@@ -27,7 +27,7 @@ public class PropertiesController : ControllerBase
     /// <param name="minPrice">Filter properties with price greater than or equal to this value</param>
     /// <param name="maxPrice">Filter properties with price less than or equal to this value</param>
     /// <param name="page">Page number (1-based, default: 1)</param>
-    /// <param name="pageSize">Number of items per page (default: 10, max: 100)</param>
+    /// <param name="pageSize">Number of items per page (default: 12, max: 12)</param>
     /// <returns>Paginated list of properties with essential information only</returns>
     /// <response code="200">Returns the paginated list of properties</response>
     /// <response code="400">Invalid request parameters</response>
@@ -40,7 +40,7 @@ public class PropertiesController : ControllerBase
         [FromQuery] decimal? minPrice = null,
         [FromQuery] decimal? maxPrice = null,
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+        [FromQuery] int pageSize = 12)
     {
         // Validate parameters
         if (page < 1)
@@ -48,9 +48,9 @@ public class PropertiesController : ControllerBase
             return BadRequest("Page must be greater than 0");
         }
 
-        if (pageSize < 1 || pageSize > 100)
+        if (pageSize < 1 || pageSize > 12)
         {
-            return BadRequest("PageSize must be between 1 and 100");
+            return BadRequest("PageSize must be between 1 and 12");
         }
 
         if (minPrice.HasValue && maxPrice.HasValue && minPrice.Value > maxPrice.Value)

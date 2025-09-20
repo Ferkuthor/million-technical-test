@@ -1,48 +1,17 @@
-"use client";
+import { PropertiesClient } from "./__components__/PropertiesClient";
+import { PropertyListDto, PaginatedResponseDto } from "./types";
+import { fetchProperties } from "./hooks/useProperties";
 
-import { PropertyBasicCard } from "@/app/properties/__components__/PropertyBasicCard/PropertyBasicCard";
-import { useProperties } from "./hooks/useProperties";
+export default async function PropertiesPage() {
+  let initialData: PaginatedResponseDto<PropertyListDto> | undefined =
+    undefined;
 
-export default function PropertiesPage() {
-  const { data, isLoading, error } = useProperties();
+  try {
+    initialData = await fetchProperties();
+  } catch (err) {
+    // If server fetch fails, let client handle it
+    console.error("Server-side fetch failed:", err);
+  }
 
-  return (
-    <div className="container mx-auto p-4">
-      {isLoading && (
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading...</div>
-        </div>
-      )}
-      {error && (
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg text-red-600">
-            Error loading properties: {error.message}
-          </div>
-        </div>
-      )}
-      {!isLoading && !error && data && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {data.data.map((property) => {
-            const imageSrc =
-              property.mainImage ||
-              "https://via.placeholder.com/1170x780?text=No+Image";
-
-            const price = `$${property.price.toLocaleString()}`;
-
-            return (
-              <PropertyBasicCard
-                key={property.id}
-                id={property.id}
-                imageSrc={imageSrc}
-                name={property.name}
-                address={property.address}
-                price={price}
-                year={property.year}
-              />
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
+  return <PropertiesClient initialData={initialData} />;
 }
