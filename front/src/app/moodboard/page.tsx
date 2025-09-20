@@ -40,8 +40,7 @@ export default function Moodboard() {
               name="Luxury Villa"
               address="123 Ocean Drive, Miami, FL"
               price="$2,500,000"
-              codeInternal={`PROP-${index + 1}`}
-              year={2020 + index}
+              year={2020}
             />
           ))}
         </div>
