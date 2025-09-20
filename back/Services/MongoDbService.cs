@@ -124,6 +124,90 @@ public class MongoDbService
     }
 
     /// <summary>
+    /// Gets paginated properties optimized for listing (only essential fields)
+    /// </summary>
+    /// <param name="name">Optional name filter (partial match)</param>
+    /// <param name="address">Optional address filter (partial match)</param>
+    /// <param name="minPrice">Optional minimum price filter</param>
+    /// <param name="maxPrice">Optional maximum price filter</param>
+    /// <param name="page">Page number (1-based)</param>
+    /// <param name="pageSize">Number of items per page</param>
+    /// <returns>Paginated list of properties with only essential fields</returns>
+    public async Task<PaginatedResponseDto<PropertyListDto>> GetPropertiesListAsync(
+        string? name = null,
+        string? address = null,
+        decimal? minPrice = null,
+        decimal? maxPrice = null,
+        int page = 1,
+        int pageSize = 10)
+    {
+        // Build filter (same as GetPropertiesAsync)
+        var filterBuilder = Builders<Property>.Filter;
+        var filters = new List<FilterDefinition<Property>>();
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            filters.Add(filterBuilder.Regex(p => p.Name, new Regex(name, RegexOptions.IgnoreCase)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(address))
+        {
+            filters.Add(filterBuilder.Regex(p => p.Address, new Regex(address, RegexOptions.IgnoreCase)));
+        }
+
+        if (minPrice.HasValue)
+        {
+            filters.Add(filterBuilder.Gte(p => p.Price, minPrice.Value));
+        }
+
+        if (maxPrice.HasValue)
+        {
+            filters.Add(filterBuilder.Lte(p => p.Price, maxPrice.Value));
+        }
+
+        var filter = filters.Count > 0 ? filterBuilder.And(filters) : FilterDefinition<Property>.Empty;
+
+        // Get total count
+        var totalItems = await _properties.CountDocumentsAsync(filter);
+
+        // Calculate pagination
+        var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+        var skip = (page - 1) * pageSize;
+
+        // Get properties with pagination
+        var properties = await _properties
+            .Find(filter)
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+
+        // Map to optimized DTOs (no owner lookup needed)
+        var propertyListDtos = properties.Select(p => new PropertyListDto
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Address = p.Address,
+            Price = p.Price,
+            Year = p.Year,
+            MainImage = p.Images.FirstOrDefault(img => img.Enabled)?.File
+        }).ToList();
+
+        return new PaginatedResponseDto<PropertyListDto>
+        {
+            Data = propertyListDtos,
+            Pagination = new PaginationDto
+            {
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalItems,
+                TotalPages = totalPages,
+                HasNext = page < totalPages,
+                HasPrevious = page > 1
+            }
+        };
+    }
+
+    /// <summary>
     /// Gets a single property with complete owner details by ID
     /// </summary>
     /// <param name="id">Property ID</param>

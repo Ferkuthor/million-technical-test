@@ -1,4 +1,41 @@
 /// <summary>
+/// Data Transfer Object for Property listing (optimized for list views)
+/// Contains only essential information for property cards
+/// </summary>
+public class PropertyListDto
+{
+    /// <summary>
+    /// Unique identifier for the property
+    /// </summary>
+    public string? Id { get; set; }
+
+    /// <summary>
+    /// Name of the property
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Address of the property
+    /// </summary>
+    public string Address { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Price of the property
+    /// </summary>
+    public decimal Price { get; set; }
+
+    /// <summary>
+    /// Year the property was built
+    /// </summary>
+    public int Year { get; set; }
+
+    /// <summary>
+    /// Main image URL for the property
+    /// </summary>
+    public string? MainImage { get; set; }
+}
+
+/// <summary>
 /// Data Transfer Object for Property with Owner information
 /// Used for API responses that include owner details
 /// </summary>

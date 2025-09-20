@@ -15,7 +15,6 @@ interface PropertyBasicCardProps {
   name: string;
   address: string;
   price: string;
-  codeInternal: string;
   year: number;
 }
 
@@ -25,14 +24,13 @@ export function PropertyBasicCard({
   name,
   address,
   price,
-  codeInternal,
   year,
 }: PropertyBasicCardProps) {
   return (
     <Card className="pt-0">
       <Image
         src={imageSrc}
-        alt="Property image"
+        alt={name}
         width={1170}
         height={780}
         className="w-full h-auto rounded-t-lg mb-4"
@@ -42,8 +40,7 @@ export function PropertyBasicCard({
           <h2>{name}</h2>
         </CardTitle>
         <CardDescription>{address}</CardDescription>
-        <CardDescription>Code: {codeInternal}</CardDescription>
-        <CardDescription>Year: {year}</CardDescription>
+        <CardDescription>{year}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">

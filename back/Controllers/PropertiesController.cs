@@ -20,7 +20,7 @@ public class PropertiesController : ControllerBase
     }
 
     /// <summary>
-    /// Get a paginated list of properties with optional search filters
+    /// Get a paginated list of properties with optional search filters (optimized for listing)
     /// </summary>
     /// <param name="name">Filter by property name (partial match, case-insensitive)</param>
     /// <param name="address">Filter by property address (partial match, case-insensitive)</param>
@@ -28,13 +28,13 @@ public class PropertiesController : ControllerBase
     /// <param name="maxPrice">Filter properties with price less than or equal to this value</param>
     /// <param name="page">Page number (1-based, default: 1)</param>
     /// <param name="pageSize">Number of items per page (default: 10, max: 100)</param>
-    /// <returns>Paginated list of properties with owner information</returns>
+    /// <returns>Paginated list of properties with essential information only</returns>
     /// <response code="200">Returns the paginated list of properties</response>
     /// <response code="400">Invalid request parameters</response>
     [HttpGet]
-    [ProducesResponseType(typeof(PaginatedResponseDto<PropertyDto>), 200)]
+    [ProducesResponseType(typeof(PaginatedResponseDto<PropertyListDto>), 200)]
     [ProducesResponseType(400)]
-    public async Task<ActionResult<PaginatedResponseDto<PropertyDto>>> GetProperties(
+    public async Task<ActionResult<PaginatedResponseDto<PropertyListDto>>> GetProperties(
         [FromQuery] string? name = null,
         [FromQuery] string? address = null,
         [FromQuery] decimal? minPrice = null,
@@ -60,7 +60,7 @@ public class PropertiesController : ControllerBase
 
         try
         {
-            var result = await _mongoDbService.GetPropertiesAsync(name, address, minPrice, maxPrice, page, pageSize);
+            var result = await _mongoDbService.GetPropertiesListAsync(name, address, minPrice, maxPrice, page, pageSize);
             return Ok(result);
         }
         catch (Exception ex)
