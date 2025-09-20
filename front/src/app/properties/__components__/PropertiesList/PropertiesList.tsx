@@ -6,6 +6,7 @@ import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesLis
 import { Pagination } from "@/app/properties/__components__/PropertiesList/Pagination";
 import { useProperties } from "../../hooks/useProperties";
 import { PropertyListDto, PaginatedResponseDto } from "../../types";
+import { Loader } from "@/components/ui/loader";
 
 interface PropertiesClientProps {
   initialData?: PaginatedResponseDto<PropertyListDto>;
@@ -56,7 +57,7 @@ export function PropertiesClient({
     <div className="container mx-auto p-4">
       {isPageTransition && (
         <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading...</div>
+          <Loader size="lg" />
         </div>
       )}
       {error && (
