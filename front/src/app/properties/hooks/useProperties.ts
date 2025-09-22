@@ -1,15 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '../types';
 
-interface FetchPropertiesParams {
-  page?: number;
-  pageSize?: number;
-}
+type FetchPropertiesParams = Record<string, string>;
 
 export const fetchProperties = async (params: FetchPropertiesParams = {}): Promise<PaginatedResponseDto<PropertyListDto>> => {
   const queryParams = new URLSearchParams();
-  if (params.page) queryParams.append('page', params.page.toString());
-  if (params.pageSize) queryParams.append('pageSize', params.pageSize.toString());
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) queryParams.append(key, value);
+  });
 
   const url = `http://localhost:5116/api/properties${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
   const response = await fetch(url);
@@ -20,8 +18,8 @@ export const fetchProperties = async (params: FetchPropertiesParams = {}): Promi
 };
 
 export const useProperties = (params: FetchPropertiesParams = {}, initialData?: PaginatedResponseDto<PropertyListDto>) => {
-  const currentPage = params.page || 1;
-  const currentPageSize = params.pageSize || 12;
+  const currentPage = params.page ? parseInt(params.page) : 1;
+  const currentPageSize = params.pageSize ? parseInt(params.pageSize) : 12;
 
   // Check if initialData matches current params
   const shouldUseInitialData = initialData &&

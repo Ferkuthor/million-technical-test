@@ -10,18 +10,27 @@ export default async function PropertiesPage({
   searchParams,
 }: PropertiesPageProps) {
   const searchParamsResolved = await searchParams;
-  const page = searchParamsResolved.page
-    ? parseInt(searchParamsResolved.page as string)
-    : 1;
+  const params: Record<string, string> = {};
+  Object.entries(searchParamsResolved).forEach(([key, value]) => {
+    if (value) {
+      params[key] = Array.isArray(value) ? value[0] : value;
+    }
+  });
+  if (!params.page) params.page = "1";
+  if (!params.pageSize) params.pageSize = "12";
+
   let initialData: PaginatedResponseDto<PropertyListDto> | undefined =
     undefined;
 
   try {
-    initialData = await fetchProperties({ page, pageSize: 12 });
+    initialData = await fetchProperties(params);
   } catch (err) {
     // If server fetch fails, let client handle it
     console.error("Server-side fetch failed:", err);
   }
 
-  return <PropertiesClient initialData={initialData} currentPage={page} />;
+  const currentPage = parseInt(params.page);
+  return (
+    <PropertiesClient initialData={initialData} currentPage={currentPage} />
+  );
 }
