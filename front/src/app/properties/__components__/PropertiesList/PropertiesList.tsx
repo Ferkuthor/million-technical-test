@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesList/PropertyBasicCard";
 import { Pagination } from "@/app/properties/__components__/PropertiesList/Pagination";
+import { PropertiesFilters } from "@/app/properties/__components__/PropertiesList/PropertiesFilters";
 import { useProperties } from "../../hooks/useProperties";
 import { PropertyListDto, PaginatedResponseDto } from "../../types";
 import { Loader } from "@/components/ui/loader";
@@ -69,6 +70,7 @@ export function PropertiesClient({
       )}
       {!isPageTransition && !error && data && (
         <>
+          <PropertiesFilters />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {data.data.map((property) => {
               const imageSrc =
