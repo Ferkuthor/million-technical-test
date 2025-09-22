@@ -1,9 +1,62 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, RotateCcw } from "lucide-react";
+import { FetchPropertiesParams } from "../../hooks/useProperties";
 
-export function PropertiesFilters() {
+interface PropertiesFiltersProps {
+  currentParams: FetchPropertiesParams;
+  onSearch: (params: Partial<FetchPropertiesParams>) => void;
+}
+
+export function PropertiesFilters({
+  currentParams,
+  onSearch,
+}: PropertiesFiltersProps) {
+  const [filters, setFilters] = useState({
+    name: currentParams.name || "",
+    address: currentParams.address || "",
+    minPrice: currentParams.minPrice || "",
+    maxPrice: currentParams.maxPrice || "",
+  });
+
+  useEffect(() => {
+    setFilters({
+      name: currentParams.name || "",
+      address: currentParams.address || "",
+      minPrice: currentParams.minPrice || "",
+      maxPrice: currentParams.maxPrice || "",
+    });
+  }, [currentParams]);
+
+  const handleSearch = () => {
+    const searchParams: Partial<FetchPropertiesParams> = {
+      page: "1", // Reset to first page when searching
+      pageSize: currentParams.pageSize || "12",
+    };
+
+    if (filters.name.trim()) searchParams.name = filters.name.trim();
+    if (filters.address.trim()) searchParams.address = filters.address.trim();
+    if (filters.minPrice.trim()) {
+      searchParams.minPrice = filters.minPrice.trim();
+    }
+    if (filters.maxPrice.trim()) {
+      searchParams.maxPrice = filters.maxPrice.trim();
+    }
+
+    onSearch(searchParams);
+  };
+
+  const handleReset = () => {
+    setFilters({
+      name: "",
+      address: "",
+      minPrice: "",
+      maxPrice: "",
+    });
+    onSearch({ page: "1", pageSize: currentParams.pageSize || "12" });
+  };
   return (
     <div className="mb-6 p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -18,6 +71,10 @@ export function PropertiesFilters() {
             id="name"
             type="text"
             placeholder="Property name"
+            value={filters.name}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, name: e.target.value }))
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -32,6 +89,10 @@ export function PropertiesFilters() {
             id="address"
             type="text"
             placeholder="Property address"
+            value={filters.address}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, address: e.target.value }))
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -46,6 +107,10 @@ export function PropertiesFilters() {
             id="minPrice"
             type="number"
             placeholder="Minimum price"
+            value={filters.minPrice}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, minPrice: e.target.value }))
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -60,15 +125,19 @@ export function PropertiesFilters() {
             id="maxPrice"
             type="number"
             placeholder="Maximum price"
+            value={filters.maxPrice}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, maxPrice: e.target.value }))
+            }
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
       </div>
       <div className="flex gap-2 mt-4">
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary" size="sm" onClick={handleSearch}>
           <Search /> Search
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={handleReset}>
           <RotateCcw /> Reset
         </Button>
       </div>

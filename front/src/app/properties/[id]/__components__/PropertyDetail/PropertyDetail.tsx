@@ -31,8 +31,7 @@ export function PropertyDetail({ property }: PropertyDetailProps) {
   const router = useRouter();
 
   const handleBack = () => {
-    // Always go to properties list - simpler and more predictable
-    router.push("/properties");
+    router.back();
   };
 
   return (
@@ -40,7 +39,7 @@ export function PropertyDetail({ property }: PropertyDetailProps) {
       <div className="flex justify-end mb-6">
         <Button variant="outline" size="sm" onClick={handleBack}>
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to List
+          Back
         </Button>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

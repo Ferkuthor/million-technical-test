@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
+import Loading from "../../loading";
 
 interface PropertyBasicCardProps {
   id: string;
@@ -27,6 +29,18 @@ export function PropertyBasicCard({
   price,
   year,
 }: PropertyBasicCardProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleViewClick = () => {
+    setIsLoading(true);
+    router.push(`/properties/${id}`);
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Card className="pt-0">
       <Image
@@ -46,11 +60,9 @@ export function PropertyBasicCard({
       <CardContent>
         <div className="flex justify-between items-center">
           <p className="text-lg font-bold text-secondary">{price}</p>
-          <Link href={`/properties/${id}`}>
-            <Button>
-              <Eye /> View
-            </Button>
-          </Link>
+          <Button onClick={handleViewClick}>
+            <Eye /> View
+          </Button>
         </div>
       </CardContent>
     </Card>

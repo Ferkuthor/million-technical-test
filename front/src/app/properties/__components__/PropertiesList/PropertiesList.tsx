@@ -5,44 +5,56 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesList/PropertyBasicCard";
 import { Pagination } from "@/app/properties/__components__/PropertiesList/Pagination";
 import { PropertiesFilters } from "@/app/properties/__components__/PropertiesList/PropertiesFilters";
-import { useProperties } from "../../hooks/useProperties";
+import {
+  useProperties,
+  FetchPropertiesParams,
+} from "../../hooks/useProperties";
 import { PropertyListDto, PaginatedResponseDto } from "../../types";
 import { Loader } from "@/components/ui/loader";
 
 interface PropertiesClientProps {
   initialData?: PaginatedResponseDto<PropertyListDto>;
-  currentPage?: number;
+  currentParams?: FetchPropertiesParams;
 }
 
 export function PropertiesClient({
   initialData,
-  currentPage: initialPage = 1,
+  currentParams: initialParams = { page: "1", pageSize: "12" },
 }: PropertiesClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(initialPage);
-  const [pageSize] = useState(12); // You can make this configurable if desired
+  const [currentParams, setCurrentParams] = useState(initialParams);
 
   // Sync with URL parameters
   useEffect(() => {
-    const pageFromUrl = searchParams.get("page");
-    const page = pageFromUrl ? parseInt(pageFromUrl) : 1;
-    if (page !== currentPage) {
-      setCurrentPage(page);
-    }
-  }, [searchParams]); // Remove currentPage from dependencies to avoid infinite loop
+    const params: FetchPropertiesParams = {
+      page: searchParams.get("page") || "1",
+      pageSize: searchParams.get("pageSize") || "12",
+      name: searchParams.get("name") || undefined,
+      address: searchParams.get("address") || undefined,
+      minPrice: searchParams.get("minPrice") || undefined,
+      maxPrice: searchParams.get("maxPrice") || undefined,
+    };
+    setCurrentParams(params);
+  }, [searchParams]);
 
   const { data, isLoading, error } = useProperties(
-    { page: currentPage, pageSize },
-    initialData && currentPage === initialPage ? initialData : undefined
+    currentParams,
+    initialData &&
+      JSON.stringify(currentParams) === JSON.stringify(initialParams)
+      ? initialData
+      : undefined
   );
 
   // Detect when we're loading a different page than what's currently displayed
   const isPageTransition =
-    isLoading || (data && data.pagination.currentPage !== currentPage);
+    isLoading ||
+    (data &&
+      data.pagination.currentPage !== parseInt(currentParams.page || "1"));
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    const newParams = { ...currentParams, page: page.toString() };
+    setCurrentParams(newParams);
     // Update URL
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
@@ -51,6 +63,24 @@ export function PropertiesClient({
       params.set("page", page.toString());
     }
     const newUrl = params.toString() ? `?${params.toString()}` : "";
+    router.replace(`/properties${newUrl}`);
+  };
+
+  const handleSearch = (searchParamsObj: Partial<FetchPropertiesParams>) => {
+    const newParams = { ...searchParamsObj };
+    setCurrentParams(newParams as FetchPropertiesParams);
+    // Update URL
+    const urlParams = new URLSearchParams();
+    if (newParams.page && newParams.page !== "1")
+      urlParams.set("page", newParams.page);
+    if (newParams.pageSize && newParams.pageSize !== "12")
+      urlParams.set("pageSize", newParams.pageSize);
+    if (newParams.name) urlParams.set("name", newParams.name);
+    if (newParams.address) urlParams.set("address", newParams.address);
+    if (newParams.minPrice) urlParams.set("minPrice", newParams.minPrice);
+    if (newParams.maxPrice) urlParams.set("maxPrice", newParams.maxPrice);
+
+    const newUrl = urlParams.toString() ? `?${urlParams.toString()}` : "";
     router.replace(`/properties${newUrl}`);
   };
 
@@ -70,7 +100,10 @@ export function PropertiesClient({
       )}
       {!isPageTransition && !error && data && (
         <>
-          <PropertiesFilters />
+          <PropertiesFilters
+            currentParams={currentParams}
+            onSearch={handleSearch}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {data.data.map((property) => {
               const imageSrc =
