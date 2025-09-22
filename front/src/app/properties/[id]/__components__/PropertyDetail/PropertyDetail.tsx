@@ -29,10 +29,13 @@ interface PropertyDetailProps {
 
 export function PropertyDetail({ property }: PropertyDetailProps) {
   const router = useRouter();
-
+  console.log(
+    "%cfront/src/app/properties/[id]/__components__/PropertyDetail/PropertyDetail.tsx:35 object",
+    "color: #007acc;",
+    window.history
+  );
   const handleBack = () => {
-    // Always go to properties list - simpler and more predictable
-    router.push("/properties");
+    router.back();
   };
 
   return (

@@ -17,6 +17,18 @@ export const fetchProperties = async (params: FetchPropertiesParams = {}): Promi
   return response.json();
 };
 
+export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
+  const url = `http://localhost:5116/api/properties/${id}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Property not found');
+    }
+    throw new Error('Failed to fetch property details');
+  }
+  return response.json();
+};
+
 export const useProperties = (params: FetchPropertiesParams = {}, initialData?: PaginatedResponseDto<PropertyListDto>) => {
   const currentPage = params.page ? parseInt(params.page) : 1;
   const currentPageSize = params.pageSize ? parseInt(params.pageSize) : 12;
@@ -42,14 +54,4 @@ export const useProperties = (params: FetchPropertiesParams = {}, initialData?: 
   });
 };
 
-export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
-  const url = `http://localhost:5116/api/properties/${id}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error('Property not found');
-    }
-    throw new Error('Failed to fetch property details');
-  }
-  return response.json();
-};
+
