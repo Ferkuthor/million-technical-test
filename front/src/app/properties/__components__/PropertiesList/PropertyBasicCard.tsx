@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 interface PropertyBasicCardProps {
   id: string;
@@ -46,7 +47,9 @@ export function PropertyBasicCard({
         <div className="flex justify-between items-center">
           <p className="text-lg font-bold text-secondary">{price}</p>
           <Link href={`/properties/${id}`}>
-            <Button>View</Button>
+            <Button>
+              <Eye /> View
+            </Button>
           </Link>
         </div>
       </CardContent>
