@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real Estate Properties Application
 
-## Getting Started
+This is the frontend application developed with Next.js for managing and viewing real estate properties.
 
-First, run the development server:
+## Features
+
+- **Properties Listing**: Paginated view with basic property cards.
+- **Advanced Filters**: Allows filtering properties by various criteria.
+- **Detailed View**: Individual page with complete information, image gallery, owner data, and transaction history.
+- **Moodboard**: Dedicated page for visual inspiration.
+- **Responsive Design**: Optimized for mobile and desktop devices.
+- **State Management**: Uses Zustand for global state management.
+- **Data Fetching**: TanStack Query for efficient API queries.
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (with Turbopack)
+- **Language**: TypeScript
+- **UI**: React 19, Tailwind CSS 4, Shadcn UI
+- **State**: Zustand
+- **Data**: TanStack React Query
+- **Testing**: Vitest, Testing Library
+
+## Prerequisites
+
+- Node.js 18 or higher
+- Backend API running
+
+## Configuration
+
+The application connects to a backend API. To change the backend base URL, edit the file `src/config/.ts`.
+Make sure the backend is running at the specified URL before starting the frontend application.
+
+## Running
+
+### Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run tests with Vitest:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Run all tests
+npm test
 
-## Learn More
+# With UI
+npm run test:ui
 
-To learn more about Next.js, take a look at the following resources:
+# Watch mode
+npm run test
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Coverage
+npm run test:coverage
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+The project follows a modular architecture designed to be scalable and maintainable. Each feature is organized as an independent module containing its own components, hooks, stores, and tests. This modular organization allows components to be easily extracted and migrated to other projects, as each module encapsulates its dependencies and logic within its own directory structure.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+front/
+├── src/
+│   ├── app/
+│   │   ├── properties/         # Properties module
+│   │   │   ├── __components__/ # Properties list components
+│   │   │   │   └── tests/      # Components Tests
+│   │   │   ├── [id]/           # property details module
+│   │   │   │   ├── __components__/ # Detail page components
+│   │   │   │   └── tests/      # Components Tests
+│   │   │   ├── hooks/          # Custom hooks
+│   │   │   ├── stores/         # State stores
+│   │   ├── moodboard/          # Moodboard UI inspiration
+│   ├── components/             # Shared reusable UI components & layouts
+│   ├── lib/                    # Utilities and types
+│   └── config/                 # App configuration
+└── public/                     # Static assets
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Integration
+
+The application consumes a REST API with the following main endpoints:
+
+- `GET /api/properties` - Paginated list of properties
+- `GET /api/properties/{id}` - Complete property details
+
+Data types are defined in `src/lib/types/properties.ts`.

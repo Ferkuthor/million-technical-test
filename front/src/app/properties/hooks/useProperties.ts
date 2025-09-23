@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '@/lib/types';
-import { API_BASE_URL } from '@/lib/config';
+import { API_BASE_URL } from '@/config/app-config';
 
 export interface FetchPropertiesParams {
   page?: string;

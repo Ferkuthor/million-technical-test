@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useProperties, fetchProperties, fetchPropertyDetail, FetchPropertiesParams } from './useProperties';
 import { PropertyDetailDto } from '@/lib/types';
-import { API_BASE_URL } from '@/lib/config';
+import { API_BASE_URL } from '@/config/app-config';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
