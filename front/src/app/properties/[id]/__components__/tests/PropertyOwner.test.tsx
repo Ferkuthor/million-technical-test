@@ -5,7 +5,7 @@ import { vi, describe, it, expect } from 'vitest';
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => <img {...props} data-testid="next-image" />,
+  default: (props: Record<string, unknown>) => <img {...props} data-testid="next-image" />,
 }));
 
 describe('PropertyOwner', () => {

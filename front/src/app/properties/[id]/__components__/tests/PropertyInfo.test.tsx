@@ -71,7 +71,6 @@ describe('PropertyInfo', () => {
 
     // Check that code and year are in the right section
     const codeElement = screen.getByText('Code: VILLA001');
-    const yearElement = screen.getByText('Year: 2022');
     const rightSection = codeElement.closest('.text-right');
     expect(rightSection).toBeInTheDocument();
     expect(rightSection).toHaveTextContent('Code: VILLA001');

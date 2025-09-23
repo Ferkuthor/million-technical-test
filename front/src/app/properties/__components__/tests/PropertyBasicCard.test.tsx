@@ -19,7 +19,7 @@ vi.mock('../../loading', () => ({
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
   __esModule: true,
-  default: (props: any) => <img {...props} />,
+  default: (props: Record<string, unknown>) => <img {...props} />,
 }));
 
 describe('PropertyBasicCard', () => {

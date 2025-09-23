@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PropertyDetailContainer } from '../PropertyDetailContainer';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import type { PropertyDetailDto } from '../../../../../lib/types/properties';
 
 // Mock next/navigation
 const mockBack = vi.fn();
@@ -12,13 +13,13 @@ vi.mock('next/navigation', () => ({
 
 // Mock child components
 vi.mock('../PropertyImageGallery', () => ({
-  PropertyImageGallery: ({ images }: { images: any[] }) => (
+  PropertyImageGallery: ({ images }: { images: PropertyDetailDto['images'] }) => (
     <div data-testid="image-gallery">Gallery with {images.length} images</div>
   ),
 }));
 
 vi.mock('../PropertyInfo', () => ({
-  PropertyInfo: (props: any) => (
+  PropertyInfo: (props: Pick<PropertyDetailDto, 'name' | 'address' | 'price' | 'codeInternal' | 'year'>) => (
     <div data-testid="property-info">
       {props.name} - {props.price}
     </div>
@@ -30,19 +31,19 @@ vi.mock('../PropertyActions', () => ({
 }));
 
 vi.mock('../PropertyTrace', () => ({
-  PropertyTrace: ({ trace }: { trace: any[] }) => (
+  PropertyTrace: ({ trace }: { trace: PropertyDetailDto['trace'] }) => (
     <div data-testid="property-trace">Trace with {trace.length} items</div>
   ),
 }));
 
 vi.mock('../PropertyOwner', () => ({
-  PropertyOwner: ({ owner }: { owner: any }) => (
+  PropertyOwner: ({ owner }: { owner: PropertyDetailDto['owner'] }) => (
     <div data-testid="property-owner">{owner.name}</div>
   ),
 }));
 
 describe('PropertyDetailContainer', () => {
-  const mockProperty = {
+  const mockProperty: PropertyDetailDto = {
     name: 'Luxury Villa',
     address: '123 Luxury St, Paradise City',
     price: 1500000,
@@ -54,14 +55,14 @@ describe('PropertyDetailContainer', () => {
       { file: 'image3.jpg', enabled: true },
     ],
     trace: [
-      { dateSale: new Date('2023-01-01'), name: 'Sale 1', value: 1400000, tax: 140000 },
-      { dateSale: new Date('2023-06-01'), name: 'Sale 2', value: 1500000, tax: 150000 },
+      { dateSale: '2023-01-01T00:00:00.000Z', name: 'Sale 1', value: 1400000, tax: 140000 },
+      { dateSale: '2023-06-01T00:00:00.000Z', name: 'Sale 2', value: 1500000, tax: 150000 },
     ],
     owner: {
       name: 'John Doe',
       address: '456 Owner St',
       photo: 'owner.jpg',
-      birthday: new Date('1980-01-01'),
+      birthday: '1980-01-01T00:00:00.000Z',
     },
   };
 

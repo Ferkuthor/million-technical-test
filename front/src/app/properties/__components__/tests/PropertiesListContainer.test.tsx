@@ -35,7 +35,7 @@ vi.mock('../Pagination', () => ({
 }));
 
 vi.mock('../PropertiesFilters', () => ({
-  PropertiesFilters: ({ onSearch, onReset }: { onSearch: any; onReset: any }) =>
+  PropertiesFilters: ({ onSearch, onReset }: { onSearch: (filters: { name: string }) => void; onReset: () => void }) =>
     <div data-testid="properties-filters">
       <button onClick={() => onSearch({ name: 'test' })}>Search</button>
       <button onClick={onReset}>Reset</button>
@@ -74,7 +74,7 @@ describe('PropertiesListContainer', () => {
     mockSearchParams.delete('maxPrice');
 
     // Setup default mock return
-    (usePropertiesStore as any).mockReturnValue(mockStore);
+    (usePropertiesStore as vi.Mock).mockReturnValue(mockStore);
   });
 
   afterEach(() => {
@@ -116,7 +116,7 @@ describe('PropertiesListContainer', () => {
   });
 
   it('shows loader when loading is true', () => {
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       loading: true,
     });
@@ -128,7 +128,7 @@ describe('PropertiesListContainer', () => {
 
   it('shows error message when error exists', () => {
     const errorMessage = 'Failed to load properties';
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       error: errorMessage,
     });
@@ -144,7 +144,7 @@ describe('PropertiesListContainer', () => {
       pagination: { currentPage: 1, pageSize: 12, totalItems: 0, totalPages: 0, hasNext: false, hasPrevious: false },
     };
 
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: emptyData,
     });
@@ -163,7 +163,7 @@ describe('PropertiesListContainer', () => {
       pagination: { currentPage: 1, pageSize: 12, totalItems: 2, totalPages: 1, hasNext: false, hasPrevious: false },
     };
 
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: mockData,
     });
@@ -183,7 +183,7 @@ describe('PropertiesListContainer', () => {
       pagination: { currentPage: 1, pageSize: 12, totalItems: 1, totalPages: 2, hasNext: true, hasPrevious: false },
     };
 
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: mockData,
     });
@@ -198,7 +198,7 @@ describe('PropertiesListContainer', () => {
   });
 
   it('handles search correctly', async () => {
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: {
         data: [],
@@ -225,7 +225,7 @@ describe('PropertiesListContainer', () => {
   });
 
   it('handles reset correctly', async () => {
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: {
         data: [],
@@ -253,7 +253,7 @@ describe('PropertiesListContainer', () => {
       pagination: { currentPage: 1, pageSize: 12, totalItems: 1, totalPages: 1, hasNext: false, hasPrevious: false },
     };
 
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: mockData,
     });
@@ -274,7 +274,7 @@ describe('PropertiesListContainer', () => {
       pagination: { currentPage: 1, pageSize: 12, totalItems: 1, totalPages: 1, hasNext: false, hasPrevious: false },
     };
 
-    (usePropertiesStore as any).mockReturnValue({
+    (usePropertiesStore as vi.Mock).mockReturnValue({
       ...mockStore,
       data: mockData,
     });

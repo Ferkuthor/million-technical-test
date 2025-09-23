@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useProperties, fetchProperties, fetchPropertyDetail, FetchPropertiesParams } from './useProperties';
-import { PaginatedResponseDto, PropertyListDto, PropertyDetailDto } from '@/lib/types';
+import { PropertyDetailDto } from '@/lib/types';
 import { API_BASE_URL } from '@/lib/config';
 
 // Mock fetch globally
@@ -133,7 +133,7 @@ describe('useProperties hooks', () => {
         fetchStatus: 'idle',
         refetch: vi.fn(),
         remove: vi.fn(),
-      } as any;
+      } as ReturnType<typeof useQuery>;
       mockUseQuery.mockReturnValue(mockQueryResult);
 
       renderHook(() => useProperties(params));
@@ -160,7 +160,7 @@ describe('useProperties hooks', () => {
         data: [],
         pagination: { currentPage: 1, pageSize: 12, totalPages: 1, totalItems: 0, hasNext: false, hasPrevious: false },
       };
-      const mockQueryResult = { data: initialData, isLoading: false } as any;
+      const mockQueryResult = { data: initialData, isLoading: false } as ReturnType<typeof useQuery>;
       mockUseQuery.mockReturnValue(mockQueryResult);
 
       renderHook(() => useProperties(params, initialData));
@@ -179,7 +179,7 @@ describe('useProperties hooks', () => {
         data: [],
         pagination: { currentPage: 1, pageSize: 12, totalPages: 1, totalItems: 0, hasNext: false, hasPrevious: false },
       };
-      const mockQueryResult = { data: null, isLoading: false } as any;
+      const mockQueryResult = { data: null, isLoading: false } as ReturnType<typeof useQuery>;
       mockUseQuery.mockReturnValue(mockQueryResult);
 
       renderHook(() => useProperties(params, initialData));
@@ -194,7 +194,7 @@ describe('useProperties hooks', () => {
 
     it('returns the result from useQuery', () => {
       const params: FetchPropertiesParams = {};
-      const mockQueryResult = { data: 'test data', isLoading: true, error: null } as any;
+      const mockQueryResult = { data: 'test data', isLoading: true, error: null } as ReturnType<typeof useQuery>;
       mockUseQuery.mockReturnValue(mockQueryResult);
 
       const { result } = renderHook(() => useProperties(params));
