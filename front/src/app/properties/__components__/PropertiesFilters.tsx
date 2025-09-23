@@ -17,10 +17,10 @@ export function PropertiesFilters({
   onReset,
 }: PropertiesFiltersProps) {
   const [filters, setFilters] = useState({
-    name: currentParams.name || "",
-    address: currentParams.address || "",
-    minPrice: currentParams.minPrice || "",
-    maxPrice: currentParams.maxPrice || "",
+    name: "",
+    address: "",
+    minPrice: "",
+    maxPrice: "",
   });
 
   useEffect(() => {

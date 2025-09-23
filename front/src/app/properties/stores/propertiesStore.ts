@@ -59,9 +59,13 @@ export const usePropertiesStore = create<PropertiesStore>()(devtools((set, get) 
   },
 
   setPagination: (newPagination) => {
-    set((state) => ({
-      pagination: { ...state.pagination, ...newPagination },
-    }), false, 'setPagination');
+    const current = get().pagination;
+    const updated = { ...current, ...newPagination };
+    if (updated.page !== current.page || updated.pageSize !== current.pageSize) {
+      set(() => ({
+        pagination: updated,
+      }), false, 'setPagination');
+    }
   },
 
   fetchData: async () => {

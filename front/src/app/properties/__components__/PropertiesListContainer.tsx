@@ -37,7 +37,7 @@ export function PropertiesListContainer({
     if (initialData) {
       initialize(initialData, initialParams);
     }
-  }, [initialData, initialParams, initialize]);
+  }, []);
 
   // Sync store with URL parameters on mount/client navigation
   useEffect(() => {
