@@ -32,6 +32,6 @@ export default async function PropertiesPage({
   }
 
   return (
-    <PropertiesClient initialData={initialData} currentParams={fetchParams} />
+    <PropertiesClient initialData={initialData} initialParams={fetchParams} />
   );
 }

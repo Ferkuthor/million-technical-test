@@ -1,31 +1,47 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesList/PropertyBasicCard";
 import { Pagination } from "@/app/properties/__components__/PropertiesList/Pagination";
 import { PropertiesFilters } from "@/app/properties/__components__/PropertiesList/PropertiesFilters";
-import {
-  useProperties,
-  FetchPropertiesParams,
-} from "../../hooks/useProperties";
+import { FetchPropertiesParams } from "../../hooks/useProperties";
 import { PropertyListDto, PaginatedResponseDto } from "../../types";
 import { Loader } from "@/components/ui/loader";
+import { usePropertiesStore } from "@/app/properties/stores/propertiesStore";
 
 interface PropertiesClientProps {
   initialData?: PaginatedResponseDto<PropertyListDto>;
-  currentParams?: FetchPropertiesParams;
+  initialParams?: FetchPropertiesParams;
 }
 
 export function PropertiesClient({
   initialData,
-  currentParams: initialParams = { page: "1", pageSize: "12" },
+  initialParams = { page: "1", pageSize: "12" },
 }: PropertiesClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentParams, setCurrentParams] = useState(initialParams);
+  const {
+    data,
+    loading,
+    error,
+    pagination,
+    filters,
+    initialize,
+    setPagination,
+    setFilters,
+    fetchData,
+    resetFilters,
+  } = usePropertiesStore();
 
-  // Sync with URL parameters
+  // Initialize store with SSR data
+  useEffect(() => {
+    if (initialData) {
+      initialize(initialData, initialParams);
+    }
+  }, [initialData, initialParams, initialize]);
+
+  // Sync store with URL parameters on mount/client navigation
   useEffect(() => {
     const params: FetchPropertiesParams = {
       page: searchParams.get("page") || "1",
@@ -35,26 +51,26 @@ export function PropertiesClient({
       minPrice: searchParams.get("minPrice") || undefined,
       maxPrice: searchParams.get("maxPrice") || undefined,
     };
-    setCurrentParams(params);
-  }, [searchParams]);
 
-  const { data, isLoading, error } = useProperties(
-    currentParams,
-    initialData &&
-      JSON.stringify(currentParams) === JSON.stringify(initialParams)
-      ? initialData
-      : undefined
-  );
+    setFilters({
+      name: params.name || '',
+      address: params.address || '',
+      minPrice: params.minPrice || '',
+      maxPrice: params.maxPrice || '',
+    });
+    setPagination({
+      page: parseInt(params.page || '1'),
+      pageSize: parseInt(params.pageSize || '12'),
+    });
+  }, [searchParams, setFilters, setPagination]);
 
   // Detect when we're loading a different page than what's currently displayed
   const isPageTransition =
-    isLoading ||
-    (data &&
-      data.pagination.currentPage !== parseInt(currentParams.page || "1"));
+    loading ||
+    (data && data.pagination.currentPage !== pagination.page);
 
-  const handlePageChange = (page: number) => {
-    const newParams = { ...currentParams, page: page.toString() };
-    setCurrentParams(newParams);
+  const handlePageChange = async (page: number) => {
+    setPagination({ page });
     // Update URL
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
@@ -64,24 +80,44 @@ export function PropertiesClient({
     }
     const newUrl = params.toString() ? `?${params.toString()}` : "";
     router.replace(`/properties${newUrl}`);
+    // Fetch data
+    await fetchData();
   };
 
-  const handleSearch = (searchParamsObj: Partial<FetchPropertiesParams>) => {
-    const newParams = { ...searchParamsObj };
-    setCurrentParams(newParams as FetchPropertiesParams);
+  const handleSearch = async (searchParamsObj: Partial<FetchPropertiesParams>) => {
+    const newFilters = {
+      name: searchParamsObj.name || '',
+      address: searchParamsObj.address || '',
+      minPrice: searchParamsObj.minPrice || '',
+      maxPrice: searchParamsObj.maxPrice || '',
+    };
+    setFilters(newFilters);
+    setPagination({ page: 1 }); // Reset to first page
+
     // Update URL
     const urlParams = new URLSearchParams();
-    if (newParams.page && newParams.page !== "1")
-      urlParams.set("page", newParams.page);
-    if (newParams.pageSize && newParams.pageSize !== "12")
-      urlParams.set("pageSize", newParams.pageSize);
-    if (newParams.name) urlParams.set("name", newParams.name);
-    if (newParams.address) urlParams.set("address", newParams.address);
-    if (newParams.minPrice) urlParams.set("minPrice", newParams.minPrice);
-    if (newParams.maxPrice) urlParams.set("maxPrice", newParams.maxPrice);
+    if (searchParamsObj.page && searchParamsObj.page !== "1")
+      urlParams.set("page", searchParamsObj.page);
+    if (searchParamsObj.pageSize && searchParamsObj.pageSize !== "12")
+      urlParams.set("pageSize", searchParamsObj.pageSize);
+    if (searchParamsObj.name) urlParams.set("name", searchParamsObj.name);
+    if (searchParamsObj.address) urlParams.set("address", searchParamsObj.address);
+    if (searchParamsObj.minPrice) urlParams.set("minPrice", searchParamsObj.minPrice);
+    if (searchParamsObj.maxPrice) urlParams.set("maxPrice", searchParamsObj.maxPrice);
 
     const newUrl = urlParams.toString() ? `?${urlParams.toString()}` : "";
     router.replace(`/properties${newUrl}`);
+    // Fetch data
+    await fetchData();
+  };
+
+  const handleReset = async () => {
+    resetFilters();
+    // Update URL to reset
+    const newUrl = "";
+    router.replace(`/properties${newUrl}`);
+    // Fetch data
+    await fetchData();
   };
 
   return (
@@ -94,15 +130,23 @@ export function PropertiesClient({
       {error && (
         <div className="flex justify-center items-center h-64">
           <div className="text-lg text-red-600">
-            Error loading properties: {error.message}
+            Error loading properties: {error}
           </div>
         </div>
       )}
       {!isPageTransition && !error && data && (
         <>
           <PropertiesFilters
-            currentParams={currentParams}
+            currentParams={{
+              page: pagination.page.toString(),
+              pageSize: pagination.pageSize.toString(),
+              name: filters.name || undefined,
+              address: filters.address || undefined,
+              minPrice: filters.minPrice || undefined,
+              maxPrice: filters.maxPrice || undefined,
+            }}
             onSearch={handleSearch}
+            onReset={handleReset}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {data.data.map((property) => {

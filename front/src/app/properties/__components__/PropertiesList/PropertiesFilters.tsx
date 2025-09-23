@@ -8,11 +8,13 @@ import { FetchPropertiesParams } from "../../hooks/useProperties";
 interface PropertiesFiltersProps {
   currentParams: FetchPropertiesParams;
   onSearch: (params: Partial<FetchPropertiesParams>) => void;
+  onReset: () => void;
 }
 
 export function PropertiesFilters({
   currentParams,
   onSearch,
+  onReset,
 }: PropertiesFiltersProps) {
   const [filters, setFilters] = useState({
     name: currentParams.name || "",
@@ -55,7 +57,7 @@ export function PropertiesFilters({
       minPrice: "",
       maxPrice: "",
     });
-    onSearch({ page: "1", pageSize: currentParams.pageSize || "12" });
+    onReset();
   };
   return (
     <div className="mb-6 p-4">
