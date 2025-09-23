@@ -71,10 +71,10 @@ export const usePropertiesStore = create<PropertiesStore>((set, get) => ({
       const params: FetchPropertiesParams = {
         page: pagination.page.toString(),
         pageSize: pagination.pageSize.toString(),
-        name: filters.name || undefined,
-        address: filters.address || undefined,
-        minPrice: filters.minPrice || undefined,
-        maxPrice: filters.maxPrice || undefined,
+        name: filters.name || "",
+        address: filters.address || "",
+        minPrice: filters.minPrice || "",
+        maxPrice: filters.maxPrice || "",
       };
 
       const data = await fetchProperties(params);

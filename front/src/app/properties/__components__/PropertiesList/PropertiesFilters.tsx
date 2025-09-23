@@ -77,6 +77,9 @@ export function PropertiesFilters({
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, name: e.target.value }))
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSearch();
+            }}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -95,6 +98,9 @@ export function PropertiesFilters({
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, address: e.target.value }))
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSearch();
+            }}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -113,6 +119,9 @@ export function PropertiesFilters({
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, minPrice: e.target.value }))
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSearch();
+            }}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
@@ -131,6 +140,9 @@ export function PropertiesFilters({
             onChange={(e) =>
               setFilters((prev) => ({ ...prev, maxPrice: e.target.value }))
             }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSearch();
+            }}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
