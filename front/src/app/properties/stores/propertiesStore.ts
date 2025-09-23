@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 import { PropertyListDto, PaginatedResponseDto } from '@/lib/types';
 import { fetchProperties, FetchPropertiesParams } from '@/app/properties/hooks/useProperties';
 
@@ -48,24 +49,24 @@ const initialState: PropertiesState = {
   error: null,
 };
 
-export const usePropertiesStore = create<PropertiesStore>((set, get) => ({
+export const usePropertiesStore = create<PropertiesStore>()(devtools((set, get) => ({
   ...initialState,
 
   setFilters: (newFilters) => {
     set((state) => ({
       filters: { ...state.filters, ...newFilters },
-    }));
+    }), false, 'setFilters');
   },
 
   setPagination: (newPagination) => {
     set((state) => ({
       pagination: { ...state.pagination, ...newPagination },
-    }));
+    }), false, 'setPagination');
   },
 
   fetchData: async () => {
     const { filters, pagination } = get();
-    set({ loading: true, error: null });
+    set({ loading: true, error: null }, false, 'fetchData_start');
 
     try {
       const params: FetchPropertiesParams = {
@@ -78,9 +79,9 @@ export const usePropertiesStore = create<PropertiesStore>((set, get) => ({
       };
 
       const data = await fetchProperties(params);
-      set({ data, loading: false });
+      set({ data, loading: false }, false, 'fetchData_success');
     } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'An error occurred', loading: false });
+      set({ error: error instanceof Error ? error.message : 'An error occurred', loading: false }, false, 'fetchData_error');
     }
   },
 
@@ -93,7 +94,7 @@ export const usePropertiesStore = create<PropertiesStore>((set, get) => ({
         maxPrice: '',
       },
       pagination: { ...state.pagination, page: 1 },
-    }));
+    }), false, 'resetFilters');
   },
 
   initialize: (initialData, params) => {
@@ -111,6 +112,6 @@ export const usePropertiesStore = create<PropertiesStore>((set, get) => ({
       },
       loading: false,
       error: null,
-    });
+    }, false, 'initialize');
   },
-}));
+}), { name: 'PropertiesStore' }));
