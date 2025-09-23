@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PropertyDetailContainer } from "./__components__";
 import { fetchPropertyDetail } from "../hooks/useProperties";
 import { notFound } from "next/navigation";
@@ -6,6 +7,26 @@ interface PageProps {
   params: {
     id: string;
   };
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const paramsResolved = await params;
+  const { id } = paramsResolved;
+
+  try {
+    const property = await fetchPropertyDetail(id);
+    return {
+      title: property.name,
+      description: `Detailed information about ${property.name}`,
+    };
+  } catch {
+    return {
+      title: "Property Details",
+      description: "Detailed information about the selected property",
+    };
+  }
 }
 
 export default async function PropertyDetailPage({ params }: PageProps) {

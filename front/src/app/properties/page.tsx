@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { PropertiesListContainer } from "./__components__";
 import { PropertyListDto, PaginatedResponseDto } from "@/lib/types";
 import { fetchProperties } from "./hooks/useProperties";
+
+export const metadata: Metadata = {
+  title: "Properties",
+  description: "Browse our available properties",
+};
 
 interface PropertiesPageProps {
   searchParams: {
