@@ -1,15 +1,11 @@
 "use client";
 
-import { PropertyImageGallery } from "../PropertyImageGallery/PropertyImageGallery";
-import { PropertyInfo } from "../PropertyInfo/PropertyInfo";
-import { PropertyActions } from "../PropertyActions/PropertyActions";
-import { PropertyTrace } from "../PropertyTrace/PropertyTrace";
-import { PropertyOwner } from "../PropertyOwner/PropertyOwner";
+import { PropertyImageGallery, PropertyInfo, PropertyActions, PropertyTrace, PropertyOwner } from ".";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface PropertyDetailProps {
+interface PropertyDetailContainerProps {
   property: {
     name: string;
     address: string;
@@ -27,7 +23,7 @@ interface PropertyDetailProps {
   };
 }
 
-export function PropertyDetail({ property }: PropertyDetailProps) {
+export function PropertyDetailContainer({ property }: PropertyDetailContainerProps) {
   const router = useRouter();
 
   const handleBack = () => {

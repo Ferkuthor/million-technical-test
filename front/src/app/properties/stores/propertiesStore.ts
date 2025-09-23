@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { PropertyListDto, PaginatedResponseDto } from '@/app/properties/types';
+import { PropertyListDto, PaginatedResponseDto } from '@/lib/types';
 import { fetchProperties, FetchPropertiesParams } from '@/app/properties/hooks/useProperties';
 
 interface PropertiesState {

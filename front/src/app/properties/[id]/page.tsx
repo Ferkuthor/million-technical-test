@@ -1,4 +1,4 @@
-import { PropertyDetail } from "./__components__/PropertyDetail/PropertyDetail";
+import { PropertyDetailContainer } from "./__components__";
 import { fetchPropertyDetail } from "../hooks/useProperties";
 import { notFound } from "next/navigation";
 
@@ -30,7 +30,7 @@ export default async function PropertyDetailPage({ params }: PageProps) {
         : undefined,
     };
 
-    return <PropertyDetail property={transformedProperty} />;
+    return <PropertyDetailContainer property={transformedProperty} />;
   } catch (error) {
     console.error("Error fetching property:", error);
     notFound();

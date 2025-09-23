@@ -1,9 +1,16 @@
-import { PropertiesClient } from "./__components__/PropertiesList/PropertiesList";
-import { PropertyListDto, PaginatedResponseDto } from "./types";
+import { PropertiesListContainer } from "./__components__";
+import { PropertyListDto, PaginatedResponseDto } from "@/lib/types";
 import { fetchProperties } from "./hooks/useProperties";
 
 interface PropertiesPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: {
+    page?: string;
+    pageSize?: string;
+    name?: string;
+    address?: string;
+    minPrice?: string;
+    maxPrice?: string;
+  };
 }
 
 export default async function PropertiesPage({
@@ -13,12 +20,9 @@ export default async function PropertiesPage({
 
   // Set defaults if not provided
   const fetchParams = {
-    page: (searchParamsResolved.page as string) || "1",
-    pageSize: (searchParamsResolved.pageSize as string) || "12",
-    name: searchParamsResolved.name as string,
-    address: searchParamsResolved.address as string,
-    minPrice: searchParamsResolved.minPrice as string,
-    maxPrice: searchParamsResolved.maxPrice as string,
+    ...searchParamsResolved,
+    page: searchParamsResolved.page || "1",
+    pageSize: searchParamsResolved.pageSize || "12",
   };
 
   let initialData: PaginatedResponseDto<PropertyListDto> | undefined =
@@ -32,6 +36,9 @@ export default async function PropertiesPage({
   }
 
   return (
-    <PropertiesClient initialData={initialData} initialParams={fetchParams} />
+    <PropertiesListContainer
+      initialData={initialData}
+      initialParams={fetchParams}
+    />
   );
 }

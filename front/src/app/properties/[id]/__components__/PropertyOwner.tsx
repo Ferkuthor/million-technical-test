@@ -22,6 +22,7 @@ export function PropertyOwner({ owner }: PropertyOwnerProps) {
           className="w-16 h-16 rounded-full object-cover"
         />
         <div>
+
           <p className="font-medium">{owner.name}</p>
           <p className="text-sm text-muted-foreground">{owner.address}</p>
           <p className="text-sm text-muted-foreground">

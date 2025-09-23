@@ -2,23 +2,21 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PropertyBasicCard } from "@/app/properties/__components__/PropertiesList/PropertyBasicCard";
-import { Pagination } from "@/app/properties/__components__/PropertiesList/Pagination";
-import { PropertiesFilters } from "@/app/properties/__components__/PropertiesList/PropertiesFilters";
-import { FetchPropertiesParams } from "../../hooks/useProperties";
-import { PropertyListDto, PaginatedResponseDto } from "../../types";
+import { PropertyBasicCard, Pagination, PropertiesFilters } from ".";
+import { FetchPropertiesParams } from "../hooks/useProperties";
+import { PropertyListDto, PaginatedResponseDto } from "@/lib/types";
 import { Loader } from "@/components/ui/loader";
 import { usePropertiesStore } from "@/app/properties/stores/propertiesStore";
 
-interface PropertiesClientProps {
+interface PropertiesListContainerProps {
   initialData?: PaginatedResponseDto<PropertyListDto>;
   initialParams?: FetchPropertiesParams;
 }
 
-export function PropertiesClient({
+export function PropertiesListContainer({
   initialData,
   initialParams = { page: "1", pageSize: "12" },
-}: PropertiesClientProps) {
+}: PropertiesListContainerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {

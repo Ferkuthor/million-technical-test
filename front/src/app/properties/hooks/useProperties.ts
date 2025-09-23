@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '../types';
+import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '@/lib/types';
 
 export interface FetchPropertiesParams {
   page?: string;
@@ -10,6 +10,7 @@ export interface FetchPropertiesParams {
   maxPrice?: string;
 }
 
+// Fetch properties list
 export const fetchProperties = async (params: FetchPropertiesParams = {}): Promise<PaginatedResponseDto<PropertyListDto>> => {
   const queryParams = new URLSearchParams();
   if (params.page) queryParams.append('page', params.page);
@@ -27,6 +28,20 @@ export const fetchProperties = async (params: FetchPropertiesParams = {}): Promi
   return response.json();
 };
 
+// Fetch property detail
+export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
+  const url = `http://localhost:5116/api/properties/${id}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Property not found');
+    }
+    throw new Error('Failed to fetch property details');
+  }
+  return response.json();
+};
+
+// Use react query 
 export const useProperties = (params: FetchPropertiesParams = {}, initialData?: PaginatedResponseDto<PropertyListDto>) => {
   const currentPage = params.page ? parseInt(params.page) : 1;
   const currentPageSize = params.pageSize ? parseInt(params.pageSize) : 12;
@@ -52,14 +67,4 @@ export const useProperties = (params: FetchPropertiesParams = {}, initialData?: 
   });
 };
 
-export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
-  const url = `http://localhost:5116/api/properties/${id}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    if (response.status === 404) {
-      throw new Error('Property not found');
-    }
-    throw new Error('Failed to fetch property details');
-  }
-  return response.json();
-};
+
