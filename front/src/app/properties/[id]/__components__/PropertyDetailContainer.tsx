@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { PropertyImageGallery, PropertyInfo, PropertyActions, PropertyTrace, PropertyOwner } from ".";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
