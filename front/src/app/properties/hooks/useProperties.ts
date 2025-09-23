@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { PropertyListDto, PaginatedResponseDto, PropertyDetailDto } from '@/lib/types';
+import { API_BASE_URL } from '@/lib/config';
 
 export interface FetchPropertiesParams {
   page?: string;
@@ -20,7 +21,7 @@ export const fetchProperties = async (params: FetchPropertiesParams = {}): Promi
   if (params.minPrice) queryParams.append('minPrice', params.minPrice);
   if (params.maxPrice) queryParams.append('maxPrice', params.maxPrice);
 
-  const url = `http://localhost:5116/api/properties${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+  const url = `${API_BASE_URL}/api/properties${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Failed to fetch properties');
@@ -30,7 +31,7 @@ export const fetchProperties = async (params: FetchPropertiesParams = {}): Promi
 
 // Fetch property detail
 export const fetchPropertyDetail = async (id: string): Promise<PropertyDetailDto> => {
-  const url = `http://localhost:5116/api/properties/${id}`;
+  const url = `${API_BASE_URL}/api/properties/${id}`;
   const response = await fetch(url);
   if (!response.ok) {
     if (response.status === 404) {
