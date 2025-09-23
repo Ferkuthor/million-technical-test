@@ -24,11 +24,10 @@ This is the frontend application developed with Next.js for managing and viewing
 ## Prerequisites
 
 - Node.js 18 or higher
-- Backend API running
 
 ## Configuration
 
-The application connects to a backend API. To change the backend base URL, edit the file `src/config/.ts`.
+The application connects to a backend API. To change the backend base URL, edit the file `src/config/app-config.ts`.
 Make sure the backend is running at the specified URL before starting the frontend application.
 
 ## Running
