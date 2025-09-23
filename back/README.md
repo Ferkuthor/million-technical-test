@@ -23,8 +23,6 @@ A comprehensive REST API for managing real estate properties with advanced searc
 ### Prerequisites
 
 - .NET 8.0 SDK
-- MongoDB Atlas account or local MongoDB instance
-- Database with sample data (see `.mongodb` file for schema)
 
 ### Steps
 
